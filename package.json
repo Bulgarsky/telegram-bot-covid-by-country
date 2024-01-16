@@ -1,0 +1,26 @@
+{
+  "name": "telegram-bot-covid-by-country",
+  "version": "1.0.0",
+  "description": "Telegram bot: get Covid statistics by country",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "build": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node.js",
+    "telegraf",
+    "covid-19"
+  ],
+  "author": "https://github.com/bulgarsky",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.5",
+    "dotenv": "^16.3.1",
+    "telegraf": "^4.15.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
