@@ -129,11 +129,31 @@ function getMessageReplyLetterList(countryList){
 }
 
 function getMessageReplyByCountry(response){
-    return `${response.country} (${response.continent}), population: ${response.population}\n
-Cases:\n new: ${response.cases.new},\n active: ${response.cases.active}, \n critical: ${response.cases.critical},\n recovered: ${response.cases.recovered},\n total: ${response.cases.total},\n
-Deaths:\n new: ${response.deaths.new},\n total: ${response.deaths.total},\n
-Tests:\n total: ${response.tests.total},\n
-Date: ${response.day}`;
+    let {
+        country,
+        continent,
+        population,
+        day: date,
+        cases: {
+            new: newCases, active: activeCases, critical:critCases, recovered: recoveredCases, total: totalCases
+        },
+        deaths: {
+            new: newDeaths, total: totalDeaths
+        },
+        tests: {
+            total: totalTests
+        }
+    } = response;
+
+
+
+    let msg = `${country} (${continent}), population: ${population}\n
+Cases:\n new: ${newCases},\n active: ${activeCases}, \n critical: ${critCases},\n recovered: ${recoveredCases},\n total: ${totalCases},\n
+Deaths:\n new: ${newDeaths},\n total: ${totalDeaths},\n
+Tests:\n total: ${totalTests},\n
+Date: ${date}`;
+
+    return msg;
 }
 
 
