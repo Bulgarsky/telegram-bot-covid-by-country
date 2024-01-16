@@ -145,15 +145,11 @@ function getMessageReplyByCountry(response){
         }
     } = response;
 
-
-
-    let msg = `${country} (${continent}), population: ${population}\n
+    return `${country} (${continent}), population: ${population}\n
 Cases:\n new: ${newCases},\n active: ${activeCases}, \n critical: ${critCases},\n recovered: ${recoveredCases},\n total: ${totalCases},\n
 Deaths:\n new: ${newDeaths},\n total: ${totalDeaths},\n
 Tests:\n total: ${totalTests},\n
 Date: ${date}`;
-
-    return msg;
 }
 
 
