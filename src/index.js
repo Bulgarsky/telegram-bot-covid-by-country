@@ -2,7 +2,6 @@ require("dotenv").config();
 const { Telegraf } = require('telegraf');
 const covidService = require('./services/covid');
 
-
 //use your telegram apikey here (get from @botfather)
 const bot = new Telegraf(process.env.BOT_APY_KEY);
 
@@ -13,7 +12,7 @@ const ALPHABET = [
     'Z', 'X', 'C', 'V', 'B', 'N', 'M'
 ]
 
-///////////////////
+
 bot.start((context) => {
     const userFirstName = context.update.message.from.first_name;
     context.reply(`Hello, ${userFirstName} click to /help to get instruction`);
@@ -50,21 +49,12 @@ async function checkList(country){
 }
 
 async function isEnglish(letter){
-    if(ALPHABET.includes(letter.toUpperCase())){
-        console.warn(true, 'english letter: ', letter);
-        return true;
-    } else {
-        console.warn(false, 'not english: ', letter);
-        return false;
-    }
-
+    return ALPHABET.includes(letter.toUpperCase());
 }
 
 async function getListByLetter(letter){
     let LetterList = {};
     let letterIndex = 0;
-
-    await isEnglish(letter);
 
     if(!List.length){
         const apiResponse = await covidService.getCountryList();  //object
@@ -86,6 +76,15 @@ async function getListByLetter(letter){
     return LetterList;
 }
 
+function isEmptyObject(obj) {
+    for (const prop in obj) {
+        if (Object.hasOwn(obj, prop)) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 bot.hears(/.*/, async (context) => {
     let country = context.message.text;
@@ -97,8 +96,14 @@ bot.hears(/.*/, async (context) => {
     if(country.length === 1){
         if(await isEnglish(country)){
             let LetterList = await getListByLetter(country);
-            let msg = getMessageReplyLetterList(LetterList);
-            context.reply(`${country.toUpperCase()}-letter country names: \n\n${msg}`);
+
+            if(isEmptyObject(LetterList)){
+                context.reply(`Countries That Start With The Letter ${country.toUpperCase()} not found!\n\n But YOU can read that: https://www.worldatlas.com/articles/countries-that-start-with-the-letter-x.html`);
+            }else{
+                let msg = getMessageReplyLetterList(LetterList);
+                context.reply(`Countries That Start With The Letter "${country.toUpperCase()}": \n\n${msg}`);
+            }
+
         } else {
             context.reply("Please, use english letters");
         }
@@ -112,9 +117,7 @@ bot.hears(/.*/, async (context) => {
             context.reply(`List have ${List.length} countries`);
             context.reply(`Bad request! Country "${country.toLowerCase()}" not found. \n /help`);
         }
-
     }
-
 });
 
 function getMessageReplyLetterList(countryList){
@@ -139,7 +142,8 @@ bot.launch()
         const date = new Date();
         console.log(`Bot started ${date}`);
     })
-    .catch((error) => console.log("bot.launch() .catch ERROR: ", error));
+    .catch((error) => console.error("bot.launch() .catch ERROR:\n", error));
+
 
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
