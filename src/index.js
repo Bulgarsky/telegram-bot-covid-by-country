@@ -1,7 +1,8 @@
 require("dotenv").config();
-const { Telegraf, Markup } = require('telegraf');
+const { Telegraf } = require('telegraf');
 const covidService = require('./services/covid');
 
+//use your telegram apikey here (get from @botfather)
 const bot = new Telegraf(process.env.BOT_APY_KEY);
 
 let List = {};

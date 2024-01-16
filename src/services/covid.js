@@ -1,6 +1,9 @@
 const axios = require("axios");
 
+//use your apikey here (get from rapidapi)
+//https://rapidapi.com/api-sports/api/covid-193/
 const ApiKey= process.env.RAPID_API_KEY;
+
 const ApiHost='covid-193.p.rapidapi.com';
 const ApiStatUrl = 'https://covid-193.p.rapidapi.com/statistics'
 const ApiCountryUrl = 'https://covid-193.p.rapidapi.com/countries'
@@ -33,4 +36,4 @@ service.getCountryList = () => {
 
 module.exports = service;
 
-//https://rapidapi.com/api-sports/api/covid-193/
+
