@@ -4,6 +4,7 @@ WORKDIR /covid-bot
 
 COPY . .
 COPY src/services src/services
+COPY .env .env
 
 RUN npm install
 
