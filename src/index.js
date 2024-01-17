@@ -1,6 +1,8 @@
 require("dotenv").config();
 const { Telegraf } = require('telegraf');
 const covidService = require('./services/covid');
+const CovidService = require('./services/covid.service.js');
+const Helpers = require('./services/helper.js');
 
 //use your telegram apikey here (get from @botfather)
 const bot = new Telegraf(process.env.BOT_APY_KEY);
@@ -11,7 +13,6 @@ const ALPHABET = [
     'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
     'Z', 'X', 'C', 'V', 'B', 'N', 'M'
 ]
-
 
 bot.start((context) => {
     const userFirstName = context.update.message.from.first_name;
@@ -29,6 +30,7 @@ bot.help( (context) =>{
     `);
 });
 
+//is country on list?
 async function checkList(country){
     let check = false;
     const apiResponse = await covidService.getCountryList(); //object
@@ -48,43 +50,7 @@ async function checkList(country){
     return check;
 }
 
-async function isEnglish(letter){
-    return ALPHABET.includes(letter.toUpperCase());
-}
 
-async function getListByLetter(letter){
-    let LetterList = {};
-    let letterIndex = 0;
-
-    if(!List.length){
-        const apiResponse = await covidService.getCountryList();  //object
-        const { response } = apiResponse.data; //object
-        List = response;
-
-    } else {
-
-        for (let index in List){
-
-            if(List[index].toLowerCase().slice(0, 1).toUpperCase() === letter.toUpperCase()){
-                let key = letter + letterIndex;
-                LetterList[key] = List[index];
-                letterIndex += 1;
-            }
-        }
-    }
-
-    return LetterList;
-}
-
-function isEmptyObject(obj) {
-    for (const prop in obj) {
-        if (Object.hasOwn(obj, prop)) {
-            return false;
-        }
-    }
-
-    return true;
-}
 
 bot.hears(/.*/, async (context) => {
     let country = context.message.text;
@@ -94,13 +60,14 @@ bot.hears(/.*/, async (context) => {
     const { response, error, results } = apiResponse.data;
 
     if(country.length === 1){
-        if(await isEnglish(country)){
-            let LetterList = await getListByLetter(country);
 
-            if(isEmptyObject(LetterList)){
+        if(Helpers.isEnglish(country)){
+            let letterList = await CovidService.letterList(country);
+
+            if(isEmptyObject(letterList)){
                 context.reply(`Countries That Start With The Letter ${country.toUpperCase()} not found!\n\n But YOU can read that: https://www.worldatlas.com/articles/countries-that-start-with-the-letter-x.html`);
             }else{
-                let msg = getMessageReplyLetterList(LetterList);
+                let msg = getMessageReplyLetterList(letterList);
                 context.reply(`Countries That Start With The Letter "${country.toUpperCase()}": \n\n${msg}`);
             }
 
@@ -120,6 +87,7 @@ bot.hears(/.*/, async (context) => {
     }
 });
 
+//get reply message - list of country start with First Letter
 function getMessageReplyLetterList(countryList){
     let countryString = "";
     for(let key in countryList){
@@ -128,6 +96,7 @@ function getMessageReplyLetterList(countryList){
     return countryString;
 }
 
+//get reply message - stats by country
 function getMessageReplyByCountry(response){
     let {
         country,

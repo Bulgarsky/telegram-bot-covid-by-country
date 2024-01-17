@@ -8,7 +8,7 @@ const ApiHost='covid-193.p.rapidapi.com';
 const ApiStatUrl = 'https://covid-193.p.rapidapi.com/statistics'
 const ApiCountryUrl = 'https://covid-193.p.rapidapi.com/countries'
 
-let service ={};
+let service = {};
 
 service.getByCountry = (country) => {
     return axios.request({
@@ -32,7 +32,6 @@ service.getCountryList = () => {
         url: ApiCountryUrl
     })
 }
-
 
 module.exports = service;
 
