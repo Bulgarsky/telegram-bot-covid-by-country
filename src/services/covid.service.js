@@ -1,15 +1,14 @@
 const covidAPI = require('./covid.js');
-const covidService = require("./covid");
 const helpers = require('./helper.js');
+
 let service = {};
-
 let List = {};
-//+
-service.countryData = (countryName) => {
-    const apiResponse = covidAPI.getByCountry(countryName)
-    const { response: stats } = apiResponse.data;  //object
 
-    return stats;
+//+
+service.countryData = async (countryName) => {
+    const apiResponse = await covidAPI.getByCountry(countryName)
+      //object
+    return apiResponse.data;
 }
 
 //+
@@ -18,8 +17,8 @@ service.letterList = async (letter) => {
     let letterIndex = 0;
 
     if(helpers.isEmptyObject(List)) {
-        const apiResponse = await covidService.getCountryList() //object
-        const { response } = apiResponse.data; //object
+        const data = await service.countryList() //object
+        const { response } = data;
         List = response;
     }
 
@@ -32,5 +31,12 @@ service.letterList = async (letter) => {
     }
     return LetterList;
 }
+
+//+
+service.countryList = async () =>{
+    const apiResponse = await covidAPI.getCountryList();
+    return apiResponse.data;
+}
+
 
 module.exports = service;
