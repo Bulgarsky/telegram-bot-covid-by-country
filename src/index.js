@@ -44,15 +44,16 @@ bot.hears(/.*/, async (context) => {
             break;
 
         case "EnglishLetter":
+            let url = Helpers.worldAtlas(country);
             let letterList = await CovidService.letterList(country);
             if (Helpers.isEmptyObject(letterList)) {
                 //LIST EMPTY
-                context.reply(`Countries That Start With The Letter ${country.toUpperCase()} not found!\n\n But YOU can read that: https://www.worldatlas.com/articles/countries-that-start-with-the-letter-x.html`);
+                context.reply(`Countries That Start With The Letter ${country.toUpperCase()} not found!\n\n Read: ${url}`);
             }
             else {
                 //LIST NOT EMPTY
                 let msg = Message.getListByLetter(letterList);
-                context.reply(`Countries That Start With The Letter "${country.toUpperCase()}": \n\n${msg}`);
+                context.reply(`Countries That Start With The Letter "${country.toUpperCase()}": \n\n${msg}\n\n Read: ${url}`);
             }
             break;
         default:

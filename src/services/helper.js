@@ -33,4 +33,8 @@ helper.checkInputText = (text) => {
     }
 }
 
+helper.worldAtlas = (letter) => {
+    return `https://www.worldatlas.com/articles/countries-that-start-with-the-letter-${letter}.html`
+}
+
 module.exports = helper;
