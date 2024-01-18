@@ -57,5 +57,4 @@ service.isCountryOnList = async (country) => {
     return check;
 }
 
-
 module.exports = service;

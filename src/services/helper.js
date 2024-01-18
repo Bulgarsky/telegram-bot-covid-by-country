@@ -33,5 +33,4 @@ helper.checkInputText = (text) => {
     }
 }
 
-
 module.exports = helper;

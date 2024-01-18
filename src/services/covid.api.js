@@ -1,7 +1,6 @@
 const axios = require("axios");
 
-//use your apikey here (get from rapidapi)
-//https://rapidapi.com/api-sports/api/covid-193/
+//use your apikey (get https://rapidapi.com/api-sports/api/covid-193/) here or .envfile
 const ApiKey= process.env.RAPID_API_KEY;
 
 const ApiHost='covid-193.p.rapidapi.com';

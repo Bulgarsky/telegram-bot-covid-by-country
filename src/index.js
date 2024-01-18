@@ -4,7 +4,7 @@ const CovidService = require('./services/covid.service.js');
 const Helpers = require('./services/helper.js');
 const Message = require('./services/Message.service.js');
 
-//use your telegram apikey here (get from @botfather)
+//use your telegram apikey(get from @botfather) here or .envfile
 const bot = new Telegraf(process.env.BOT_APY_KEY);
 
 bot.start((context) => {
@@ -22,7 +22,6 @@ bot.help( (context) =>{
         e
     `);
 });
-
 
 bot.hears(/.*/, async (context) => {
     let country = context.message.text;
@@ -60,6 +59,7 @@ bot.hears(/.*/, async (context) => {
             console.warn("Switch/default. Event has not been processed. input: ", country)
             context.reply("Switch/default. Event has not been processed. input: ", country);
     }
+
 });
 
 bot.launch()
@@ -68,7 +68,6 @@ bot.launch()
         console.log(`Bot started ${date}`);
     })
     .catch((error) => console.error("bot.launch() .catch ERROR:\n", error));
-
 
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
