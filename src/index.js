@@ -3,13 +3,9 @@ const { Telegraf } = require('telegraf');
 const CovidService = require('./services/covid.service.js');
 const Helpers = require('./services/helper.js');
 const Message = require('./services/Message.service.js');
-const {message} = require("telegraf/filters");
-
 
 //use your telegram apikey here (get from @botfather)
 const bot = new Telegraf(process.env.BOT_APY_KEY);
-
-let List = {};
 
 bot.start((context) => {
     const userFirstName = context.update.message.from.first_name;

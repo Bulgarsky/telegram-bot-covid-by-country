@@ -25,7 +25,7 @@ Tests:\n total: ${totalTests},\n
 Date: ${date}`;
 }
 
-//return string - country list
+//return string - country list by First Letter
 service.getListByLetter = (countryList) => {
     let countryString = "";
     for(let key in countryList){
