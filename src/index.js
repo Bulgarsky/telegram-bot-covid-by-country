@@ -1,9 +1,10 @@
 require("dotenv").config();
 const { Telegraf } = require('telegraf');
-const covidService = require('./services/covid.api'); //del
 const CovidService = require('./services/covid.service.js');
 const Helpers = require('./services/helper.js');
 const Message = require('./services/Message.service.js');
+const {message} = require("telegraf/filters");
+
 
 //use your telegram apikey here (get from @botfather)
 const bot = new Telegraf(process.env.BOT_APY_KEY);
@@ -30,36 +31,40 @@ bot.help( (context) =>{
 bot.hears(/.*/, async (context) => {
     let country = context.message.text;
 
-    //LETTER
-    if(Helpers.isLetter(country) && Helpers.isEnglish(country)) {
-        let letterList = await CovidService.letterList(country);
+    switch (Helpers.checkInputText(country)){
+        case "NotLetter":
+            if(await CovidService.isCountryOnList(country)){
+                //COUNTRY FOUND IN LIST
+                let { response, error, results } = await CovidService.countryData(country);
+                let msg = Message.getCountryStats(response[0]);
+                context.reply(msg);
+            } else {
+                //COUNTRY NOT FOUND IN LIST
+                context.reply(`Bad request! Country "${country.toUpperCase()}" not found.\n\nClick to /help for get instruction`)
+            }
+            break;
 
-        //LIST EMPTY
-        if (Helpers.isEmptyObject(letterList)) {
-            context.reply(`Countries That Start With The Letter ${country.toUpperCase()} not found!\n\n But YOU can read that: https://www.worldatlas.com/articles/countries-that-start-with-the-letter-x.html`);
-        }
-        else {
-            //LIST
-            let msg = Message.getListByLetter(letterList);
-            context.reply(`Countries That Start With The Letter "${country.toUpperCase()}": \n\n${msg}`);
-        }
-        //LETTER NOT ENGLISH
-    } else if (!Helpers.isEnglish(country)) {
-        context.reply("Please, use english letters");
+        case "NotEnglishLetter":
+            context.reply("Please, use english letters");
+            break;
 
-        //COUNTRY FOUND IN LIST
-    } else if(await CovidService.isCountryOnList(country)){
-            let { response, error, results } = await CovidService.countryData(country);
-            let msg = Message.getCountryStats(response[0]);
-            context.reply(msg);
-        } else {
-            //NOT FOUND
-            context.reply(`List have ${List.length} countries`);
-            context.reply(`Bad request! Country "${country.toLowerCase()}" not found. \n /help`)
-        }
-
+        case "EnglishLetter":
+            let letterList = await CovidService.letterList(country);
+            if (Helpers.isEmptyObject(letterList)) {
+                //LIST EMPTY
+                context.reply(`Countries That Start With The Letter ${country.toUpperCase()} not found!\n\n But YOU can read that: https://www.worldatlas.com/articles/countries-that-start-with-the-letter-x.html`);
+            }
+            else {
+                //LIST NOT EMPTY
+                let msg = Message.getListByLetter(letterList);
+                context.reply(`Countries That Start With The Letter "${country.toUpperCase()}": \n\n${msg}`);
+            }
+            break;
+        default:
+            console.warn("Switch/default. Event has not been processed. input: ", country)
+            context.reply("Switch/default. Event has not been processed. input: ", country);
+    }
 });
-
 
 bot.launch()
     .then(result => {

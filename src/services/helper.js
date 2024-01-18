@@ -20,7 +20,18 @@ helper.isEnglish = (letter) => {
 }
 
 helper.isLetter = (country) => {
-    if(country.length === 1) return true;
+    return country.length === 1;
 }
+
+helper.checkInputText = (text) => {
+    if (helper.isLetter(text) && helper.isEnglish(text)) {
+        return "EnglishLetter";
+    } else if(helper.isLetter(text) && !helper.isEnglish(text)){
+        return "NotEnglishLetter"
+    } else if(!helper.isLetter(text)){
+        return "NotLetter"
+    }
+}
+
 
 module.exports = helper;
