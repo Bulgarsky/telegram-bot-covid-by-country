@@ -44,7 +44,7 @@ bot.hears(/.*/, async (context) => {
             break;
 
         case "EnglishLetter":
-            let url = Helpers.worldAtlas(country);
+            let url = Message.getWorldAtlas(country);
             let letterList = await CovidService.letterList(country);
             if (Helpers.isEmptyObject(letterList)) {
                 //LIST EMPTY

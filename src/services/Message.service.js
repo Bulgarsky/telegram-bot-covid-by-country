@@ -34,4 +34,9 @@ service.getListByLetter = (countryList) => {
     return countryString;
 }
 
+//return string (url)
+service.getWorldAtlas = (letter) => {
+    return `https://www.worldatlas.com/articles/countries-that-start-with-the-letter-${letter}.html`
+}
+
 module.exports = service;
